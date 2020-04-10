@@ -1,10 +1,12 @@
+//add to "components/admin/general/form"
+
 import React from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import './form.scss'
 
 
-const FormikForm = (props) => {
+const Form = (props) => {
     const {initialValues, text='Ok', mainHistory, handleSubmit, returnUrl='/'} = props;
     function reroute(){
         mainHistory.push(returnUrl);
@@ -56,9 +58,7 @@ const FormikForm = (props) => {
 }
 
 
-export default FormikForm;
+export default Form;
 
-//remove ids
-//create new componenet for file input
 
 

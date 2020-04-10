@@ -1,9 +1,10 @@
 //replace 'components/admin/new/new.js with this content.
 
+
 import React from 'react'
 import AdminHeader from '../general/header/adminHeader'
 import NavButton from '../../general/navButton'
-import Form from '../general/form/form'
+import Form from '../general/form'
 import axios from 'axios';
 
 const NewPost = props => {
@@ -37,13 +38,15 @@ const NewPost = props => {
         
         
     }
+    
     const initialValues = {postTitle:'', postContent: '', postQuote: ''}
+
     return (
         <div className="admin section-container center">
             <div className="admin-background">
                 <AdminHeader mainHistory={history}/>
                 <NavButton text="Create New Post" buttonClasses = "title" onClick="null"/>
-                <Form handleSubmit={handleSubmit} mainHistory={history} text="Post" initialValues={initialValues}/>
+                <Form handleSubmit={handleSubmit} mainHistory={history} text="Post" initialValues={initialValues}></Form>
                 <div className="bottom-space"></div>
             </div>
         </div>

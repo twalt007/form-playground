@@ -1,0 +1,30 @@
+1. "ComponentWrappers" -->
+Goal: 
+features form feild components and a form component 
+these are full jsx components that serve as rearrangable building blocks 
+they can be combined and organized to create the form structure desired in the component using them
+input components can be configured with text, have default actions removed, etc.
+form component handles all typical form actions
+the component using the form passes the validation schema and any unique on-submit functionality through to the "form" component
+the intent is a high level of customizability without needing to have standard form actions like error handling, state management, etc 'clogging up' the using component's combined
+this way the using component's code more clearly shows the use of the component and its structure, rather than basic form functionality
+
+Reason for structure/method:
+want to avoid creating a "login form", "new post form" etc. pages, with standrad form logic being repeated on each page
+also hoping to work more along Reacdt priciples, with a jsx element-type component representing the form and feilds, rather than a function (ex. "functionalRender")
+
+Current Issue:
+unable to find way to pass props between "using component" + "field components" to the functions in "form"
+
+
+2. "Unique Forms" --> 
+Goal:
+Feild Inputs used in a Form component that handles all form actions, except for API calls upon handle submit.
+Separate basic 'form' work from 'using component' work
+
+Reason for Method:
+Keep standard form logic (state handling, error handling, etc) from "clogging up" the component using it
+Unfortunately, while this method works, each form needs to grab the same 'core' base and add to it, resulting in many extra pages and repeated lines of code
+
+Current State:
+

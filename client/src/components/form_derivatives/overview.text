@@ -1,0 +1,25 @@
+1. jsxComponents:
+Preferred method, for better coninuity with React Principles
+Contains a few examples in various states
+Currently no full working model
+
+------------------------------------------
+2. Formik (uses yup for validation):
+Good for basic text-input, but server limitations for file upload, or more unique tasks
+
+Current Issue:
+Trying to find a way to upload an image to a server via Formik
+
+-------------------------------------------
+3. functionalRender
+Allows major goals of keeping form logic and using-component logic separate
+allows for high level of customizability of field and form components 
+form fields can be mixed and matched in using component
+avoids repitition of standard form logic
+
+Pitfall: 
+format a clear divergence from typical react principles
+
+State:
+contains a few eamples in various states
+

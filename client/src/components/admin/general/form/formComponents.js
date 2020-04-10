@@ -1,7 +1,5 @@
 import React from "react";
 
-//do I need to diable validate function on my submit button?  do I need to add a name to th submit button for the error?
-
 export const Field = ({
     name, label, type, value, error, onChange, 
     divClass="input-group", 
