@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import './form.scss'
 
 
-const FormOriginal = (props) => {
+const FormikForm = (props) => {
     const {initialValues, text='Ok', mainHistory, handleSubmit, returnUrl='/'} = props;
     function reroute(){
         mainHistory.push(returnUrl);
@@ -56,7 +56,7 @@ const FormOriginal = (props) => {
 }
 
 
-export default FormOriginal;
+export default FormikForm;
 
 //remove ids
 //create new componenet for file input

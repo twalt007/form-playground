@@ -4,26 +4,12 @@ import * as Yup from 'yup';
 import './form.scss'
 
 
-class Form extends Component {
-    constructor(props){
-        super(props);
-
-        this.state = {
-            data: {},
-            errors: {}
-        }
-        this.reroute = this.reroute.bind(this);
-        this.validateForm = this.validateForm.bind(this);
-        this.validateField = this.validateField.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-    }
-    
-    reroute(){
+const Form = (props) => {
+    const {initialValues, text='Ok', mainHistory, returnUrl='/'} = props;  //handleSubmit
+    function reroute(){
         mainHistory.push(returnUrl);
     };
-
-    validateForm(){
+    const validateForm = () => {
         console.log("testing validation function");
         if (!error) {
             return null;
@@ -31,35 +17,31 @@ class Form extends Component {
         //something to push error messages to variable
         return errors
     };
-    
-    validateField(){
+    const validateField = () => {
         console.log("testing validate property function");
     };
 
-    handleSubmit(e){
+    const handleSubmit = (e) => {
         e.preventDefault();
         console.log("testing submit functionality");
     };
 
-    handleChange(e){
+    const handleChange = (e) => {
         const { value } = e.currentTarget;
         console.log("inside onchange event, e props", value);
 
     };
 
-    render (){
-        const { initialValues, text= 'ok', mainHistory, returnUrl= '/', reroute} = this.props //handleSubmit 
-        console.log("this.props.children", this.props.children);
-        return(
-            <form className="form" encType="multipart/form-data" onSubmit={this.handleSubmit}>
-                {this.props.children}
-            </form>
-        )
-        
-    }        
+    return (
+       <form className="form" encType="multipart/form-data" onSubmit={handleSubmit}>
+            <Field name="testingDefault" label="Testing Default" />
+            <Field name="testingTextArea" label="testing Text Area" fieldClass="textarea" />
+            <Field name="testingOnChange" label="testing On Change" onChange={handleChange} />
+            <Field name="testingImage" label="testingimage" type="file" />
+            <FormButton returnText="ReturnTest" text={text} reroute={reroute}/>
+        </form>
+    )
 }
-
 
 export default Form;
 
-//{React.cloneElement(this.props.children, {...this.props})}

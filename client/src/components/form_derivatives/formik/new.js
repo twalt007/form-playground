@@ -1,10 +1,10 @@
 import React from 'react'
 import AdminHeader from '../general/header/adminHeader'
 import NavButton from '../../general/navButton'
-import FormOriginal from '../general/form/form_original'
+import FormikForm from '../general/form/form'
 import axios from 'axios';
 
-const NewPostOriginal = props => {
+const NewPost = props => {
     const {history, userId='a9ec5c8d-455a-11ea-8fd0-a4db300c2566'} = props;
     const handleSubmit = async(values) => {
         const data = {
@@ -41,11 +41,11 @@ const NewPostOriginal = props => {
             <div className="admin-background">
                 <AdminHeader mainHistory={history}/>
                 <NavButton text="Create New Post" buttonClasses = "title" onClick="null"/>
-                <FormOriginal handleSubmit={handleSubmit} mainHistory={history} text="Post" initialValues={initialValues}/>
+                <formikForm handleSubmit={handleSubmit} mainHistory={history} text="Post" initialValues={initialValues}/>
                 <div className="bottom-space"></div>
             </div>
         </div>
     )
 }
 
-export default NewPostOriginal;
+export default NewPost;
