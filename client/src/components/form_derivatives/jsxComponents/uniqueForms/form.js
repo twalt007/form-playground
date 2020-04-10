@@ -1,3 +1,6 @@
+//replace "components/admin/general/form/form.js" with this content
+
+
 import React from 'react';
 import { Field, FormButton } from './formComponents'
 import './form.scss'

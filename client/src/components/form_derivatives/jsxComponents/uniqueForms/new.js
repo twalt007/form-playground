@@ -1,10 +1,13 @@
+//replace 'components/admin/new/new.js with this content.
+
+
 import React from 'react'
 import AdminHeader from '../general/header/adminHeader'
 import NavButton from '../../general/navButton'
-import FormOriginal from '../general/form/form_original'
+import Form from '../general/form'
 import axios from 'axios';
 
-const NewPostOriginal = props => {
+const NewPost = props => {
     const {history, userId='a9ec5c8d-455a-11ea-8fd0-a4db300c2566'} = props;
     const handleSubmit = async(values) => {
         const data = {
@@ -35,17 +38,19 @@ const NewPostOriginal = props => {
         
         
     }
+    
     const initialValues = {postTitle:'', postContent: '', postQuote: ''}
+
     return (
         <div className="admin section-container center">
             <div className="admin-background">
                 <AdminHeader mainHistory={history}/>
                 <NavButton text="Create New Post" buttonClasses = "title" onClick="null"/>
-                <FormOriginal handleSubmit={handleSubmit} mainHistory={history} text="Post" initialValues={initialValues}/>
+                <Form handleSubmit={handleSubmit} mainHistory={history} text="Post" initialValues={initialValues}></Form>
                 <div className="bottom-space"></div>
             </div>
         </div>
     )
 }
 
-export default NewPostOriginal;
+export default NewPost;
