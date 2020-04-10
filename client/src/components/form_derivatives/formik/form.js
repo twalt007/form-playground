@@ -1,4 +1,4 @@
-//add to "components/admin/general/form"
+//replace "components/admin/general/form/form.js" with this content
 
 import React from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';

@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Field, FormButton } from './formComponents'
-import * as Yup from 'yup';
 import './form.scss'
 
 
