@@ -55,28 +55,22 @@ class Form extends Component {
         // const errorMessage = this.validateField(input);
         // if (errorMessage) errors[input.name] = errorMessage;
         // else delete errors[input.name];
-
         const data = { ...this.state.data };
         data[input.name] = input.value;
-
         this.setState({data});
         // this.setState({ data, errors });
+        console.log("form.js state: ", this.state.data);
     };
  
     render(){
-        console.log("this.props: ", this.props);
-        const { text } = this.props;
         return (
         <form className="form" encType="multipart/form-data" onSubmit={this.handleSubmit}>
-                <Field name='postTitle' label="Post Title" onChange={this.handleChange} />
-                <Field name="postContent" label="Post Content" fieldClass="textarea" onChange={this.handleChange}/>
-                <Field name="postQuote" label="Post Quote" onChange={this.handleChange}/>
-                <Field name="postImage" label="Post Image" type="file" onChange={this.handleChange}/>
-                <FormButton text={text} reroute={this.reroute}/>
-            </form>
+            {this.props.children}
+        </form>
         )
     }
 }
 
 export default Form;
+
 
