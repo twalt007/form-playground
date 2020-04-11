@@ -41,13 +41,12 @@ class Form extends Component {
     };
 
     handleSubmit(e){
-        const submitForm = this.props.submitForm;
         e.preventDefault();
         //const errors = this.validateForm();
         // this.setState({ errors: errors || {} });
         // if (errors) return;
         console.log("inside form.js handleSubmit");
-        submitForm(this.state.data);
+        this.props.submitForm(this.state.data);
         
     };
 
