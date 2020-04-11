@@ -41,11 +41,12 @@ class Form extends Component {
     };
 
     handleSubmit(e){
-        const submitForm = this.props.handleSubmit;
+        const submitForm = this.props.submitForm;
         e.preventDefault();
         //const errors = this.validateForm();
         // this.setState({ errors: errors || {} });
         // if (errors) return;
+        console.log("inside form.js handleSubmit");
         submitForm(this.state.data);
         
     };
@@ -63,6 +64,7 @@ class Form extends Component {
     };
  
     render(){
+        console.log("form.js props: ", this.props);
         return (
         <form className="form" encType="multipart/form-data" onSubmit={this.handleSubmit}>
             {this.props.children}

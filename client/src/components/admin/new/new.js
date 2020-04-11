@@ -57,7 +57,7 @@ class NewPost extends Form {
     // }
 
     submitForm = (props)=>{
-        console.log("inside parentSubmit, data recieved from child", this.props);
+        console.log("inside submitForm, data recieved from child", this.props);
     }
 
     render(){
@@ -67,7 +67,7 @@ class NewPost extends Form {
                 <div className="admin-background">
                     <AdminHeader mainHistory={history}/>
                     <NavButton text="Create New Post" buttonClasses = "title" onClick="null"/>
-                    <Form handleSubmit={this.submitForm} mainHistory={this.props.history} initialValues={initialValues}>
+                    <Form submitForm={this.submitForm} handleSubmit={this.handleSubmit} mainHistory={this.props.history} initialValues={initialValues}>
                         <Field name='postTitle' label="Post Title" onChange={this.handleChange} />
                         <Field name="postContent" label="Post Content" fieldClass="textarea" onChange={this.handleChange}/>
                         <Field name="postQuote" label="Post Quote" onChange={this.handleChange}/>

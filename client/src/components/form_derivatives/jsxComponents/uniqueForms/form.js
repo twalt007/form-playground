@@ -1,17 +1,34 @@
 //replace "components/admin/general/form/form.js" with this content
 
 
-import React from 'react';
+import React, { Component } from 'react';
 import { Field, FormButton } from './formComponents'
 import './form.scss'
 
 
-const Form = (props) => {
-    const {initialValues, text='Ok', mainHistory, returnUrl='/'} = props;  //handleSubmit
-    function reroute(){
-        mainHistory.push(returnUrl);
+class Form extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            data: {},
+            errors: {}
+        }
+        this.reroute = this.reroute.bind(this);
+        this.validateForm = this.validateForm.bind(this);
+        this.validateField = this.validateField.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+
+    // constructor?
+    // getting to making this a class, where I can push props fromonChange into state to be stored so that I can test my onSubmit
+    // remember to git add commit when I've done this, so that shows that I've 
+    // const {initialValues, text='Ok', mainHistory, returnUrl='/'} = props;  //handleSubmit
+    reroute(){
+        this.props.mainHistory.push(this.props.returnUrl);
     };
-    const validateForm = () => {
+    validateForm(){
         console.log("testing validation function");
         if (!error) {
             return null;
@@ -19,31 +36,47 @@ const Form = (props) => {
         //something to push error messages to variable
         return errors
     };
-    const validateField = () => {
+    validateField(){
         console.log("testing validate property function");
     };
 
-    const handleSubmit = (e) => {
+    handleSubmit(e){
+        const submitForm = this.props.handleSubmit;
         e.preventDefault();
-        console.log("testing submit functionality");
+        //const errors = this.validateForm();
+        // this.setState({ errors: errors || {} });
+        // if (errors) return;
+        submitForm(this.state.data);
+        
     };
 
-    const handleChange = (e) => {
-        const { value } = e.currentTarget;
-        console.log("inside onchange event, e props", value);
+    handleChange({currentTarget: input}){
+        // const errors = {...this.state.errors};
+        // const errorMessage = this.validateField(input);
+        // if (errorMessage) errors[input.name] = errorMessage;
+        // else delete errors[input.name];
 
+        const data = { ...this.state.data };
+        data[input.name] = input.value;
+
+        this.setState({data});
+        // this.setState({ data, errors });
     };
-
-    return (
-       <form className="form" encType="multipart/form-data" onSubmit={handleSubmit}>
-            <Field name="testingDefault" label="Testing Default" />
-            <Field name="testingTextArea" label="testing Text Area" fieldClass="textarea" />
-            <Field name="testingOnChange" label="testing On Change" onChange={handleChange} />
-            <Field name="testingImage" label="testingimage" type="file" />
-            <FormButton returnText="ReturnTest" text={text} reroute={reroute}/>
-        </form>
-    )
+ 
+    render(){
+        console.log("this.props: ", this.props);
+        const { text } = this.props;
+        return (
+        <form className="form" encType="multipart/form-data" onSubmit={this.handleSubmit}>
+                <Field name='postTitle' label="Post Title" onChange={this.handleChange} />
+                <Field name="postContent" label="Post Content" fieldClass="textarea" onChange={this.handleChange}/>
+                <Field name="postQuote" label="Post Quote" onChange={this.handleChange}/>
+                <Field name="postImage" label="Post Image" type="file" onChange={this.handleChange}/>
+                <FormButton text={text} reroute={this.reroute}/>
+            </form>
+        )
+    }
 }
 
 export default Form;
-
+© 2020 GitHub, Inc.
