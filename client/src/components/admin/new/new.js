@@ -43,6 +43,11 @@ const NewPost = props => {
         
         
     }
+
+    const submitForm = (props)=>{
+        console.log("inside parentSubmit, data recieved from child", props);
+
+    }
     
     const initialValues = {postTitle:'', postContent: '', postQuote: ''}
 
@@ -51,7 +56,7 @@ const NewPost = props => {
             <div className="admin-background">
                 <AdminHeader mainHistory={history}/>
                 <NavButton text="Create New Post" buttonClasses = "title" onClick="null"/>
-                <Form props={props} handleSubmit={handleSubmit} mainHistory={history} text="Post" initialValues={initialValues}></Form>
+                <Form props={props} handleSubmit={submitForm} mainHistory={history} text="Post" initialValues={initialValues}></Form>
                 
                 <div className="bottom-space"></div>
             </div>
