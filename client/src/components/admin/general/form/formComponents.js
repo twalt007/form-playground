@@ -1,7 +1,7 @@
 import React from "react";
 
 export const Field = ({
-    name, label, type, value, error, onChange, 
+    name, label, type, onChange, value, error, 
     divClass="input-group", 
     labelClass="form-label", 
     fieldClass="fat-border form-input", 
@@ -27,7 +27,8 @@ export const Field = ({
 }
 
 export const FormButton = ({
-    text, returnText, error, reroute,
+    text, error, reroute,
+    returnText="Return",
     componentDivClass="xlrg-flx-container flex-right", 
     groupDivClass="lrg-container align-right top-space", 
     divClass='small-button fat-border after-space', 
