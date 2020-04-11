@@ -1,12 +1,20 @@
+//replace 'components/admin/new/new.js with this content.
+
+
 import React from 'react'
 import AdminHeader from '../general/header/adminHeader'
 import NavButton from '../../general/navButton'
-import PostForm from '../general/form'
+import Form from '../general/form'
 import axios from 'axios';
+
+//will want to turnn this into a full class
+//whenn the form is working, I'll need to get the values pushed to state; these values will then later be pulled out of state
 
 const NewPost = props => {
     const {history, userId='a9ec5c8d-455a-11ea-8fd0-a4db300c2566'} = props;
     const handleSubmit = async(values) => {
+        console.log("inside newPost handleSubmit function")
+        console.log("newPost handleSubmit form Values: ", values)
         const data = {
             userId: userId,
             post: {
@@ -43,7 +51,8 @@ const NewPost = props => {
             <div className="admin-background">
                 <AdminHeader mainHistory={history}/>
                 <NavButton text="Create New Post" buttonClasses = "title" onClick="null"/>
-                <Form handleSubmit={handleSubmit} mainHistory={history} text="Post" initialValues={initialValues}></Form>
+                <Form props={props} handleSubmit={handleSubmit} mainHistory={history} text="Post" initialValues={initialValues}></Form>
+                
                 <div className="bottom-space"></div>
             </div>
         </div>

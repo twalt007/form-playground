@@ -12,15 +12,20 @@ class Form extends Component {
             data: {},
             errors: {}
         }
+        //is this state necessary??
+
         this.reroute = this.reroute.bind(this);
         this.validateForm = this.validateForm.bind(this);
         this.validateField = this.validateField.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.renderButtons = this.renderButtons.bind(this);
+        this.renderField = this.renderField.bind(this);
     }
     
     reroute(){
         mainHistory.push(returnUrl);
+        //use just history??
     };
 
     validateForm(){
@@ -47,19 +52,55 @@ class Form extends Component {
 
     };
 
-    render (){
-        const { initialValues, text= 'ok', mainHistory, returnUrl= '/', reroute} = this.props //handleSubmit 
-        console.log("this.props.children", this.props.children);
-        return(
-            <form className="form" encType="multipart/form-data" onSubmit={this.handleSubmit}>
-                {this.props.children}
-            </form>
+
+
+    renderButtons(text, returnText, componentDivClass, groupDivClass, buttonClass, errorClass, id){
+        const { data, errors } = this.state;
+        return (
+            <FormButton
+                text={text} 
+                returnText={returnText} 
+                reroute={reroute} 
+                componentDivClass={componentDivClass}
+                groupDivClass={groupDivClass}
+                divClass={divClass}
+                buttonClass={buttonClass}
+                errorClass={errorClass}
+                id={id}
+                error={errors[name]}
+            />
         )
         
-    }        
+    } 
+    name, label, type, value, error, onChange, 
+    divClass="input-group", 
+    labelClass="form-label", 
+    fieldClass="fat-border form-input", 
+    errorClass="form-error", 
+    id=null
+    renderField(name, label, type, value, onChange, divClass, labelClass, fieldClass, errorClass,id){
+        const { data, errors } = this.state;
+        return(
+            <Field
+                name={name}
+                label={label}
+                type={type}
+                value={value}
+                onChange={this.handleChange}
+                error={errors[name]}
+
+                
+        )
+
+    }
 }
+
+<Field name="testingDefault" label="Testing Default" />
+<Field name="testingTextArea" label="testing Text Area" fieldClass="textarea" />
+<Field name="testingOnChange" label="testing On Change" onChange={handleChange} />
+<Field name="testingImage" label="testingimage" type="file" />
+<FormButton returnText="ReturnTest" text={text} reroute={reroute}/>
 
 
 export default Form;
 
-//{React.cloneElement(this.props.children, {...this.props})}

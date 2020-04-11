@@ -1,3 +1,6 @@
+//replace "components/admin/general/form/form.js" with this content
+
+
 import React, { Component } from 'react';
 import { Field, FormButton } from './formComponents'
 import * as Yup from 'yup';
@@ -12,6 +15,7 @@ class Form extends Component {
             data: {},
             errors: {}
         }
+
         this.reroute = this.reroute.bind(this);
         this.validateForm = this.validateForm.bind(this);
         this.validateField = this.validateField.bind(this);
@@ -47,18 +51,15 @@ class Form extends Component {
 
     };
 
-    render (){
-        const { initialValues, text= 'ok', mainHistory, returnUrl= '/', reroute} = this.props //handleSubmit 
-        console.log("this.props.children", this.props.children);
+    render(){
+        console.log("this.props.children", props.children);
         return(
             <form className="form" encType="multipart/form-data" onSubmit={this.handleSubmit}>
                 {this.props.children}
             </form>
         )
-        
     }        
 }
-
 
 export default Form;
 
