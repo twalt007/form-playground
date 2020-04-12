@@ -16,27 +16,28 @@ class Form extends Component {
             errors: {}
         }
 
-        this.schema = yup.object().shape({
-            postTitle: yup.string()
-                .required('Please provide a title. Don\'t forget to name your latest brainchild!')
-                .max(60,'Title too long; will not fit on tile.  Please limit to 60 characters.'),
-                // .trim(),
-            postContent: yup.string()
-                .required('Please provide content. You\'ve got readers chomping at the bit to see what you have to say - c\'mon, thow them a bone!')
-                .trim(),
-            postQuote: yup.string()
-                .required('Please provide a quote to spark readers\' interest - preferably something witty.')
-                .max(255,'Sorry - too long!  There is a difference between a quote and a post you know!')
-                .trim()
-        });
-
         this.testInput = {
             postTitle: 'testing',
             postContent: "",
             postQuote: ""
         }
 
+        this.schema = {
+            postTitle: yup.string()
+            .required('Please provide a title. Don\'t forget to name your latest brainchild!')
+            .max(60,'Title too long; will not fit on tile.  Please limit to 60 characters.'),
+            // .trim(),
+            postContent: yup.string()
+            .required('Please provide content. You\'ve got readers chomping at the bit to see what you have to say - c\'mon, thow them a bone!')
+            .trim(),
+            postQuote: yup.string()
+            .required('Please provide a quote to spark readers\' interest - preferably something witty.')
+            .max(255,'Sorry - too long!  There is a difference between a quote and a post you know!')
+            .trim()
+        }
+
         this.reroute = this.reroute.bind(this);
+        this.createSchema = this.createSchema.bind(this);
         this.validateForm = this.validateForm.bind(this);
         this.validateField = this.validateField.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -46,22 +47,13 @@ class Form extends Component {
     // getting to making this a class, where I can push props fromonChange into state to be stored so that I can test my onSubmit
     // remember to git add commit when I've done this, so that shows that I've 
     // const {initialValues, text='Ok', mainHistory, returnUrl='/'} = props;  //handleSubmit
-    reroute(){
-        this.props.mainHistory.push(this.props.returnUrl);
-    };
+    //   need to add in logic ==> onClick/other for "touched".  if already displaying error, then forget about it.  else diplay error.
 
-    async validateForm(){
-        console.log("testing validation function");
-        // const { error } = Joi.validate(this.state.data, this.schema, options);
-        // if (!error) return null;
+//-------------
 
-
-        // const errors = {};
-        // for (let item of error.details) errors[item.path[0]] = item.message;
-        // return errors;
-    };
 
     // async validateField(input){
+
     //     console.log("testing validate property function");
         
     //     const {name, value} = input;
@@ -82,32 +74,54 @@ class Form extends Component {
     //keep this here, vs move to main class
     //isValid vs other?
     //validationsSchema ok to go into our state?
+    reroute(){
+        this.props.mainHistory.push(this.props.returnUrl);
+    };
+
+    async validateForm(){
+        // const { error } = Joi.validate(this.state.data, this.schema, options);
+        // if (!error) return null;
 
 
-    // validationSchema={Yup.object({
-    //     postTitle: Yup.string()
-    //         .required('Please provide a title. Don\'t forget to name your latest brainchild!')
-    //         .max(60,'Title too long; will not fit on tile.  Please limit to 60 characters.'),
-    //     postContent: Yup.string()
-    //         .required('Please provide content. You\'ve got readers chomping at the bit to see what you have to say - c\'mon, thow them a bone!'),
-    //     postQuote: Yup.string()
-    //         .required('Please provide a quote to spark readers\' interest - preferably something witty.')
-    //         .max(255,'Sorry - too long!  There is a difference between a quote and a post you know!')
-    // })}
-
-    async validateField(){
-        let error = [];
-        console.log("testing validate property function");
+        // const errors = {};
+        // for (let item of error.details) errors[item.path[0]] = item.message;
+        // return errors;
+        let errorForm = [];
+        console.log("inside errorForm FALSE");
         await this.schema.validate(this.testInput, {abortEarly:false}).catch(errs => {
-            console.log("eror inside try catch block: ", errs.inner);
+            console.log("inside catch errorForm: ", errs.inner);
             errs.inner.map(err=>{
-                error.push({
+                errorForm.push({
                     name: err.path,
                     message: err.message
                 });
             });            
         });
-        console.log("validateField yup returned error: ", error);
+        console.log("errorForm: ", errorForm);
+    };
+   
+
+    createSchema (name) {
+        let criteria = this.schema.name;
+        const currentSchema = yup.object().shape({name: criteria});
+        console.log("currentSchema: ", currentSchema, "allSchema: ", this.schema);
+        return currentSchema;
+    };
+
+
+    async validateField(input){
+        let {name, value } = input;
+        const schema = yup.object().shape({ [name]: this.schema[name] });
+        console.log("schema: ", schema);
+        await schema.validate({postTitle: "testing"}).catch(errs => {
+            console.log("inside catch errorField: ", errs);
+            // errs.inner.map(err=>{
+            //     errorField.push({
+            //         name: err.path,
+            //         message: err.message
+            //     });
+            // });            
+        });
         // const { error } = Joi.validate(obj, schema);
         // return error ? error.details[0].message : null;
     };
@@ -124,6 +138,7 @@ class Form extends Component {
     handleChange(e){
         const input = e.currentTarget;
         const errors = {...this.state.errors};
+        //this.validateForm(input);
         this.validateField(input);
         // const errorMessage = this.validateField(input);
         // if (errorMessage) {
@@ -153,55 +168,7 @@ export default Form;
 
 
 
-// yup example:
 
-// raw data:
-
-// { 
-//     email_address: email <required>
-//     full_name: string, <required>
-//     house_no: int,
-//     address_1: string <required>,
-//     address_2: string,
-//     post_code: string <required>
-//     timestamp: date <required>
-// }
-
-// const checkoutAddressSchema = yup.object().shape({
-//   email_address: yup
-//       .string()
-//       .email()
-//       .required(),
-//   full_name: yup
-//       .string()
-//       .required(),
-//   house_no: yup
-//       .number()
-//       .required()
-//       .positive()
-//       .integer(),
-//   address_1: yup
-//       .string()
-//       .required(),
-//   address_2: yup
-//       .string(),
-//   post_code: yup
-//       .string()
-//       .required(),
-//   timestamp: yup
-//       .date()
-//       .default(() => (new Date()),
-//    }),
-// });
-
-// data recieved:
-// let addressFormData = {
-//    email_address: 'ross@jkrbinvestments.com',
-//    full_name: 'Ross Bulat',
-//    house_no: null,
-//    address_1: 'My Street Name',
-//    post_code: 'AB01 0AB',
-// }
 
 // const valid = await checkoutAddressSchema.isValid(addressFormData);
 // OR
@@ -211,22 +178,3 @@ export default Form;
       
 //      //valid - true or false
 //   });
-
-//   also validate the object  --> for instance if we had a time stamp or other to fill in here.  can't do that here though.  no default values to fill
-//   abort early to stop after first error
-//   await checkoutAddressSchema.validate(addressFormData, { abortEarly: false })
-
-
-//   /</required>/need to add in logic ==> onClick/other for "touched".  if already displaying error, then forget about it.  else diplay error.
-
-
-
-let schema = yup.object().shape({
-    name: yup.string(),
-    age: yup.number().min(18),
-  });
-   
-  schema.validate({ name: 'jimmy', age: 11 }).catch(function(err) {
-    err.name; // => 'ValidationError'
-    err.errors; // => ['Deve ser maior que 18']
-  });
