@@ -37,7 +37,6 @@ class Form extends Component {
         }
 
         this.reroute = this.reroute.bind(this);
-        this.createSchema = this.createSchema.bind(this);
         this.validateForm = this.validateForm.bind(this);
         this.validateField = this.validateField.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -99,28 +98,14 @@ class Form extends Component {
         });
         console.log("errorForm: ", errorForm);
     };
-   
-
-    createSchema (name) {
-        let criteria = this.schema.name;
-        const currentSchema = yup.object().shape({name: criteria});
-        console.log("currentSchema: ", currentSchema, "allSchema: ", this.schema);
-        return currentSchema;
-    };
-
 
     async validateField(input){
         let {name, value } = input;
         const schema = yup.object().shape({ [name]: this.schema[name] });
-        console.log("schema: ", schema);
-        await schema.validate({postTitle: "testing"}).catch(errs => {
+        await schema.validate({name:value}).catch(errs => {
             console.log("inside catch errorField: ", errs);
-            // errs.inner.map(err=>{
-            //     errorField.push({
-            //         name: err.path,
-            //         message: err.message
-            //     });
-            // });            
+            this.state.errors[errs.path] = errs.message;
+            console.log(this.state.errors);         
         });
         // const { error } = Joi.validate(obj, schema);
         // return error ? error.details[0].message : null;
@@ -138,9 +123,7 @@ class Form extends Component {
     handleChange(e){
         const input = e.currentTarget;
         const errors = {...this.state.errors};
-        //this.validateForm(input);
-        this.validateField(input);
-        // const errorMessage = this.validateField(input);
+        const errorMessage = this.validateField(input);
         // if (errorMessage) {
         //     errors[input.name] = errorMessage;
         // } else {

@@ -1,7 +1,8 @@
 import React from "react";
 
 export const Field = ({
-    name, label, type, onChange, value, initVal, error, accept, max, min,
+    name, label, onChange, value, initVal, error, accept, max, min,
+    type="text",
     divClass="input-group", 
     labelClass="form-label", 
     fieldClass="fat-border form-input", 
