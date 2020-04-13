@@ -1,7 +1,8 @@
 import React from "react";
 
 export const Field = ({
-    name, label, type, onChange, value, error, 
+    name, label, onChange, value, initVal, error, accept, max, min,
+    type="text",
     divClass="input-group", 
     labelClass="form-label", 
     fieldClass="fat-border form-input", 
@@ -10,6 +11,7 @@ export const Field = ({
     }) => {
         
     if (fieldClass==="textarea"){ fieldClass="fat-border form-textarea"};
+    if (!value && initVal){value=initVal[name]};
     return (
         <div className = {divClass}>
             <label className= {labelClass} htmlFor={name}>{label}</label>
@@ -17,9 +19,14 @@ export const Field = ({
                 className={fieldClass} 
                 name={name} 
                 type={type} 
-                value={value} 
+                accept={accept}
+                value={initVal[name]} 
                 onChange={onChange}
                 id={id}
+                maxLength={max}
+                minLength={min}
+                max={max}
+                min={min}
             />
             {error && <div className={errorClass} name={name}>{error}</div>}
         </div>

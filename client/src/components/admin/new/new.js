@@ -17,11 +17,11 @@ class NewPost extends Form {
 
         this.state = {
             data: {},
-            errors: {}
+            errors: {},
+            initVal: {}
         }
 
         this.submitForm = this.submitForm.bind(this);
-
     }
     // handleSubmit = async(values) => {
     //     const {history, userId='a9ec5c8d-455a-11ea-8fd0-a4db300c2566'} = this.props;
@@ -58,20 +58,21 @@ class NewPost extends Form {
 
     submitForm = (props)=>{
         console.log("inside submitForm, data recieved from child", this.props);
+
     }
 
     render(){
-    const initialValues = {postTitle:'', postContent: '', postQuote: ''}
+        const initVal = this.state.initVal;
         return (
             <div className="admin section-container center">
                 <div className="admin-background">
                     <AdminHeader mainHistory={history}/>
                     <NavButton text="Create New Post" buttonClasses = "title" onClick="null"/>
-                    <Form submitForm={this.submitForm} handleSubmit={this.handleSubmit} mainHistory={this.props.history} initialValues={initialValues}>
-                        <Field name='postTitle' label="Post Title" onChange={this.handleChange} />
-                        <Field name="postContent" label="Post Content" fieldClass="textarea" onChange={this.handleChange}/>
-                        <Field name="postQuote" label="Post Quote" onChange={this.handleChange}/>
-                        <Field name="postImage" label="Post Image" type="file" onChange={this.handleChange}/>
+                    <Form submitForm={this.submitForm} handleSubmit={this.handleSubmit} mainHistory={this.props.history} >
+                        <Field name='postTitle' label="Post Title" onChange={this.handleChange} max="60" min="1" initVal={initVal} />
+                        <Field name="postContent" label="Post Content" fieldClass="textarea" onChange={this.handleChange} initVal={initVal} min="1"/>
+                        <Field name="postQuote" label="Post Quote" onChange={this.handleChange} initVal={initVal} max="255" min="1"/>
+                        <Field name="postImage" label="Post Image" type="file" accept="image/*" onChange={this.handleChange} initVal={initVal}/>
                         <FormButton text="Post" reroute={this.reroute}/>
                     </Form>
                     <div className="bottom-space"></div>
