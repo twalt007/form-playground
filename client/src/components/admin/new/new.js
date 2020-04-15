@@ -6,10 +6,8 @@ import AdminHeader from '../general/header/adminHeader'
 import NavButton from '../../general/navButton'
 import Form from '../general/form'
 import { Field, FormButton } from '../general/form/formComponents'
+import * as yup from 'yup'
 import axios from 'axios';
-
-//will want to turnn this into a full class
-//whenn the form is working, I'll need to get the values pushed to state; these values will then later be pulled out of state
 
 class NewPost extends Form {
     constructor(props){
@@ -19,6 +17,20 @@ class NewPost extends Form {
             data: {},
             errors: {},
             initVal: {}
+        }
+
+        this.validSchema = {
+            postTitle: yup.string()
+            .required('Please provide a title. Don\'t forget to name your latest brainchild!')
+            .max(60,'Title too long; will not fit on tile.  Please limit to 60 characters.')
+            .trim(),
+            postContent: yup.string()
+            .required('Please provide content. You\'ve got readers chomping at the bit to see what you have to say - c\'mon, thow them a bone!')
+            .trim(),
+            postQuote: yup.string()
+            .required('Please provide a quote to spark readers\' interest - preferably something witty.')
+            .max(255,'Sorry - too long!  There is a difference between a quote and a post you know!')
+            .trim()
         }
 
         this.submitForm = this.submitForm.bind(this);
@@ -63,12 +75,13 @@ class NewPost extends Form {
 
     render(){
         const initVal = this.state.initVal;
+        console.log("news validSchema: ", this.validSchema);
         return (
             <div className="admin section-container center">
                 <div className="admin-background">
                     <AdminHeader mainHistory={history}/>
                     <NavButton text="Create New Post" buttonClasses = "title" onClick="null"/>
-                    <Form submitForm={this.submitForm} handleSubmit={this.handleSubmit} mainHistory={this.props.history} >
+                    <Form submitForm={this.submitForm} mainHistory={this.props.history} >
                         <Field name='postTitle' label="Post Title" onChange={this.handleChange} max="60" min="1" initVal={initVal} />
                         <Field name="postContent" label="Post Content" fieldClass="textarea" onChange={this.handleChange} initVal={initVal} min="1"/>
                         <Field name="postQuote" label="Post Quote" onChange={this.handleChange} initVal={initVal} max="255" min="1"/>

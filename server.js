@@ -1,5 +1,5 @@
 const express = require('express');
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3003;
 const ApiError = require('./helpers/api_error');
 global.ApiError = ApiError;
 const routes = require('./routes')

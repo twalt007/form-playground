@@ -22,20 +22,6 @@ class Form extends Component {
             postQuote: ""
         }
 
-        this.schema = {
-            postTitle: yup.string()
-            .required('Please provide a title. Don\'t forget to name your latest brainchild!')
-            .max(60,'Title too long; will not fit on tile.  Please limit to 60 characters.'),
-            // .trim(),
-            postContent: yup.string()
-            .required('Please provide content. You\'ve got readers chomping at the bit to see what you have to say - c\'mon, thow them a bone!')
-            .trim(),
-            postQuote: yup.string()
-            .required('Please provide a quote to spark readers\' interest - preferably something witty.')
-            .max(255,'Sorry - too long!  There is a difference between a quote and a post you know!')
-            .trim()
-        }
-
         this.reroute = this.reroute.bind(this);
         this.validateForm = this.validateForm.bind(this);
         this.validateField = this.validateField.bind(this);
@@ -78,16 +64,9 @@ class Form extends Component {
     };
 
     async validateForm(){
-        // const { error } = Joi.validate(this.state.data, this.schema, options);
-        // if (!error) return null;
-
-
-        // const errors = {};
-        // for (let item of error.details) errors[item.path[0]] = item.message;
-        // return errors;
         let errorForm = [];
         console.log("inside errorForm FALSE");
-        await this.schema.validate(this.testInput, {abortEarly:false}).catch(errs => {
+        await this.props.validSchema.validate(this.testInput, {abortEarly:false}).catch(errs => {
             console.log("inside catch errorForm: ", errs.inner);
             errs.inner.map(err=>{
                 errorForm.push({
@@ -99,16 +78,14 @@ class Form extends Component {
         console.log("errorForm: ", errorForm);
     };
 
-    async validateField(input){
-        let {name, value } = input;
-        const schema = yup.object().shape({ [name]: this.schema[name] });
-        await schema.validate({name:value}).catch(errs => {
+    async validateField({name, value }){
+        const schema = yup.object().shape({ [name]: this.validSchema[name] });
+        let obj = {[name]:value};
+        await schema.validate(obj).catch(errs => {
             console.log("inside catch errorField: ", errs);
             this.state.errors[errs.path] = errs.message;
             console.log(this.state.errors);         
         });
-        // const { error } = Joi.validate(obj, schema);
-        // return error ? error.details[0].message : null;
     };
 
     handleSubmit(e){
