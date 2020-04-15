@@ -26,7 +26,7 @@ class Form extends Component {
         this.validateForm = this.validateForm.bind(this);
         this.validateField = this.validateField.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+        this.handleChangeBlur = this.handleChangeBlur.bind(this);
     }
     // constructor?
     // getting to making this a class, where I can push props fromonChange into state to be stored so that I can test my onSubmit
@@ -97,7 +97,7 @@ class Form extends Component {
         this.props.submitForm(this.state.data);
     };
 
-    handleChange(e){
+    handleChangeBlur(e){
         const input = e.currentTarget;
         const errors = {...this.state.errors};
         const errorMessage = this.validateField(input);
