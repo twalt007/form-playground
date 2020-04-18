@@ -14,7 +14,6 @@ export const Field = ({
     if (!value && initVal) {
         value=initVal[name];
     }
-    else if (!value && !initVal) value="";
     return (
         <div className = {divClass}>
             <label className= {labelClass} htmlFor={name}>{label}</label>

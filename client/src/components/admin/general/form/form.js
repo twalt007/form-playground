@@ -98,14 +98,13 @@ class Form extends Component {
         } else {
             delete errors[input.name];
         };
-
         const data = { ...this.state.data };
         data[input.name] = input.value;
         this.setState({ data, errors });
-        console.log("form.js state: ", this.state);
     };
  
     render(){
+        console.log("testing accessing child props", this.props.children)
         return (
         <form className="form" encType="multipart/form-data" onSubmit={this.handleSubmit}>
             {this.props.children}
