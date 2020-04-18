@@ -2,7 +2,6 @@
 
 
 import React, { Component } from 'react';
-import { Field, FormButton } from './formComponents';
 import * as yup from 'yup';
 import './form.scss'
 
@@ -16,17 +15,11 @@ class Form extends Component {
             errors: {}
         }
 
-        this.testInput = {
-            postTitle: 'testing',
-            postContent: "",
-            postQuote: ""
-        }
-
         this.reroute = this.reroute.bind(this);
         this.validateForm = this.validateForm.bind(this);
         this.validateField = this.validateField.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+        this.handleChangeBlur = this.handleChangeBlur.bind(this);
     }
     // constructor?
     // getting to making this a class, where I can push props fromonChange into state to be stored so that I can test my onSubmit
@@ -81,11 +74,10 @@ class Form extends Component {
     async validateField({name, value }){
         const schema = yup.object().shape({ [name]: this.validSchema[name] });
         let obj = {[name]:value};
-        await schema.validate(obj).catch(errs => {
-            console.log("inside catch errorField: ", errs);
-            this.state.errors[errs.path] = errs.message;
-            console.log(this.state.errors);         
+        let errorMessage = await schema.validate(obj).catch(errs => {
+            return errs.message;
         });
+        return errorMessage;
     };
 
     handleSubmit(e){
@@ -97,24 +89,21 @@ class Form extends Component {
         this.props.submitForm(this.state.data);
     };
 
-    handleChange(e){
-        const input = e.currentTarget;
+    async handleChangeBlur({currentTarget: input}){
         const errors = {...this.state.errors};
-        const errorMessage = this.validateField(input);
-        // if (errorMessage) {
-        //     errors[input.name] = errorMessage;
-        // } else {
-        //     delete errors[input.name]
-        // };
-
-        // const data = { ...this.state.data };
-        // data[input.name] = input.value;
-        // this.setState({ data, errors });
-        // console.log("form.js state: ", this.state.data);
+        let errorMessage = await this.validateField(input);
+        console.log("error: ", errorMessage);
+        if (errorMessage) {
+            errors[input.name] = errorMessage;
+        } else {
+            delete errors[input.name];
+        };
+        const data = { ...this.state.data };
+        data[input.name] = input.value;
+        this.setState({ data, errors });
     };
  
     render(){
-        console.log("form.js props: ", this.props);
         return (
         <form className="form" encType="multipart/form-data" onSubmit={this.handleSubmit}>
             {this.props.children}

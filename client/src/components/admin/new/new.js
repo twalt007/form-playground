@@ -70,22 +70,21 @@ class NewPost extends Form {
 
     submitForm = (props)=>{
         console.log("inside submitForm, data recieved from child", this.props);
-
+        console.log("new.js state errors: ", this.state);
     }
 
     render(){
-        const initVal = this.state.initVal;
-        console.log("news validSchema: ", this.validSchema);
+        let err = this.state.errors;
         return (
             <div className="admin section-container center">
                 <div className="admin-background">
                     <AdminHeader mainHistory={history}/>
                     <NavButton text="Create New Post" buttonClasses = "title" onClick="null"/>
                     <Form submitForm={this.submitForm} mainHistory={this.props.history} >
-                        <Field name='postTitle' label="Post Title" onChange={this.handleChange} max="60" min="1" initVal={initVal} />
-                        <Field name="postContent" label="Post Content" fieldClass="textarea" onChange={this.handleChange} initVal={initVal} min="1"/>
-                        <Field name="postQuote" label="Post Quote" onChange={this.handleChange} initVal={initVal} max="255" min="1"/>
-                        <Field name="postImage" label="Post Image" type="file" accept="image/*" onChange={this.handleChange} initVal={initVal}/>
+                        <Field name='postTitle' label="Post Title" max="60" min="1" error={err} onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur} />
+                        <Field name="postContent" label="Post Content" fieldClass="textarea" min="1" error={err} onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur}/>
+                        <Field name="postQuote" label="Post Quote" max="255" min="1" error={err} onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur} />
+                        <Field name="postImage" label="Post Image" type="file" accept="image/*" error={err} onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur} />
                         <FormButton text="Post" reroute={this.reroute}/>
                     </Form>
                     <div className="bottom-space"></div>
