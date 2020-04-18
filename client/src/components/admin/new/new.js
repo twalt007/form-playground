@@ -70,12 +70,10 @@ class NewPost extends Form {
 
     submitForm = (props)=>{
         console.log("inside submitForm, data recieved from child", this.props);
-
+        console.log("new.js state errors: ", this.state);
     }
 
     render(){
-        const initVal = this.state.initVal;
-        console.log("news validSchema: ", this.validSchema);
         return (
             <div className="admin section-container center">
                 <div className="admin-background">

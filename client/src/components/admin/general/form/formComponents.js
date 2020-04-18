@@ -11,7 +11,9 @@ export const Field = ({
     }) => {
         
     if (fieldClass==="textarea"){ fieldClass="fat-border form-textarea"};
-    if (!value && initVal) value=initVal[name]
+    if (!value && initVal) {
+        value=initVal[name];
+    }
     else if (!value && !initVal) value="";
     return (
         <div className = {divClass}>
