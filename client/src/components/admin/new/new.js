@@ -74,16 +74,17 @@ class NewPost extends Form {
     }
 
     render(){
+        let err = this.state.errors;
         return (
             <div className="admin section-container center">
                 <div className="admin-background">
                     <AdminHeader mainHistory={history}/>
                     <NavButton text="Create New Post" buttonClasses = "title" onClick="null"/>
                     <Form submitForm={this.submitForm} mainHistory={this.props.history} >
-                        <Field name='postTitle' label="Post Title" onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur} max="60" min="1" />
-                        <Field name="postContent" label="Post Content" fieldClass="textarea" onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur} min="1"/>
-                        <Field name="postQuote" label="Post Quote" onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur} max="255" min="1"/>
-                        <Field name="postImage" label="Post Image" type="file" accept="image/*" onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur} />
+                        <Field name='postTitle' label="Post Title" max="60" min="1" error={err} onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur} />
+                        <Field name="postContent" label="Post Content" fieldClass="textarea" min="1" error={err} onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur}/>
+                        <Field name="postQuote" label="Post Quote" max="255" min="1" error={err} onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur} />
+                        <Field name="postImage" label="Post Image" type="file" accept="image/*" error={err} onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur} />
                         <FormButton text="Post" reroute={this.reroute}/>
                     </Form>
                     <div className="bottom-space"></div>

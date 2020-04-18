@@ -14,6 +14,12 @@ export const Field = ({
     if (!value && initVal) {
         value=initVal[name];
     }
+    if (error[name]){
+        let errorMessage = error[name];
+        return errorMessage;
+        // let error = error[name];
+        // console.log("error after: ", error);
+    }else error = '';
     return (
         <div className = {divClass}>
             <label className= {labelClass} htmlFor={name}>{label}</label>
@@ -31,7 +37,7 @@ export const Field = ({
                 max={max}
                 min={min}
             />
-            {error && <div className={errorClass} name={name}>{error}</div>}
+            {error && <div className={errorClass} name={name}>{errorMessage}</div>}
         </div>
     )
 }

@@ -104,7 +104,6 @@ class Form extends Component {
     };
  
     render(){
-        console.log("testing accessing child props", this.props.children)
         return (
         <form className="form" encType="multipart/form-data" onSubmit={this.handleSubmit}>
             {this.props.children}
