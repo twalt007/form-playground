@@ -1,6 +1,5 @@
 //replace "components/admin/general/form/form.js" with this content
 
-
 import React, { Component } from 'react';
 import * as yup from 'yup';
 import './form.scss'
@@ -21,15 +20,7 @@ class Form extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChangeBlur = this.handleChangeBlur.bind(this);
     }
-    // constructor?
-    // getting to making this a class, where I can push props fromonChange into state to be stored so that I can test my onSubmit
-    // remember to git add commit when I've done this, so that shows that I've 
-    // const {initialValues, text='Ok', mainHistory, returnUrl='/'} = props;  //handleSubmit
-    //   need to add in logic ==> onClick/other for "touched".  if already displaying error, then forget about it.  else diplay error.
-
 //-------------
-
-
     // async validateField(input){
 
     //     console.log("testing validate property function");
@@ -46,58 +37,55 @@ class Form extends Component {
     //     // return error ? error.details[0].message : null;
     // };
 
-    //partway store, is this ok, or will the other errors appear too, stopoing after we've worked thhrough ok on four feild but stopping at next not yet touched feild?
-    //what response object is being returned?
-    //if needed, can we get the props from yup?
-    //keep this here, vs move to main class
-    //isValid vs other?
-    //validationsSchema ok to go into our state?
     reroute(){
-        this.props.mainHistory.push(this.props.returnUrl);
+        this.props.history.goBack();
     };
 
     async validateForm(){
-        let errorForm = [];
-        console.log("inside errorForm FALSE");
-        await this.props.validSchema.validate(this.testInput, {abortEarly:false}).catch(errs => {
-            console.log("inside catch errorForm: ", errs.inner);
+        const schema = yup.object().shape(this.props.validSchema);
+
+        let errors = [];
+        await schema.validate(this.state.data, {abortEarly:false}).catch(errs => {
             errs.inner.map(err=>{
-                errorForm.push({
+                errors.push({
                     name: err.path,
                     message: err.message
                 });
             });            
         });
-        console.log("errorForm: ", errorForm);
+        console.log("form errors: ", errors);
+        return errors;
     };
 
     async validateField({name, value }){
         const schema = yup.object().shape({ [name]: this.validSchema[name] });
         let obj = {[name]:value};
-        let errorMessage = await schema.validate(obj).catch(errs => {
-            return errs.message;
-        });
-        return errorMessage;
+        let errorMessage = await schema.validate(obj).catch(errs => errs);
+        if (errorMessage.message) {
+            return errorMessage.message
+        } else return null;
     };
 
-    handleSubmit(e){
+    async handleSubmit(e){
         e.preventDefault();
-        //const errors = this.validateForm();
-        // this.setState({ errors: errors || {} });
-        // if (errors) return;
-        console.log("inside form.js handleSubmit");
+        const errors = {...this.state.errors};
+
+        const [allErrors] = await this.validateForm();
+        console.log("handlesubmit returned errors: ", errors);
+        this.setState({errors : allErrors});
+        console.log("state in handle submit: ", this.state);
+        if (errors) return;
+        this.props.submitForm();
         this.props.submitForm(this.state.data);
     };
 
     async handleChangeBlur({currentTarget: input}){
+
         const errors = {...this.state.errors};
         let errorMessage = await this.validateField(input);
-        console.log("error: ", errorMessage);
-        if (errorMessage) {
-            errors[input.name] = errorMessage;
-        } else {
-            delete errors[input.name];
-        };
+        if (errorMessage) errors[input.name] = errorMessage;
+        else delete errors[input.name];
+
         const data = { ...this.state.data };
         data[input.name] = input.value;
         this.setState({ data, errors });

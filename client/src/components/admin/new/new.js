@@ -25,7 +25,7 @@ class NewPost extends Form {
             .max(60,'Title too long; will not fit on tile.  Please limit to 60 characters.')
             .trim(),
             postContent: yup.string()
-            .required('Please provide content. You\'ve got readers chomping at the bit to see what you have to say - c\'mon, thow them a bone!')
+            .required('Please provide content. Your audience awaits!')
             .trim(),
             postQuote: yup.string()
             .required('Please provide a quote to spark readers\' interest - preferably something witty.')
@@ -80,7 +80,7 @@ class NewPost extends Form {
                 <div className="admin-background">
                     <AdminHeader mainHistory={history}/>
                     <NavButton text="Create New Post" buttonClasses = "title" onClick="null"/>
-                    <Form submitForm={this.submitForm} mainHistory={this.props.history} >
+                    <Form submitForm={this.submitForm} validSchema={this.validSchema}>
                         <Field name='postTitle' label="Post Title" max="60" min="1" error={err} onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur} />
                         <Field name="postContent" label="Post Content" fieldClass="textarea" min="1" error={err} onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur}/>
                         <Field name="postQuote" label="Post Quote" max="255" min="1" error={err} onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur} />

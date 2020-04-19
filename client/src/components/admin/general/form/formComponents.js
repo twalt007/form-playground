@@ -11,15 +11,15 @@ export const Field = ({
     }) => {
         
     if (fieldClass==="textarea"){ fieldClass="fat-border form-textarea"};
+
     if (!value && initVal) {
         value=initVal[name];
     }
-    if (error[name]){
-        let errorMessage = error[name];
-        return errorMessage;
-        // let error = error[name];
-        // console.log("error after: ", error);
-    }else error = '';
+
+    let errorMessage = ' ';
+    if (error){
+        errorMessage = error[name];
+    };
     return (
         <div className = {divClass}>
             <label className= {labelClass} htmlFor={name}>{label}</label>
@@ -37,7 +37,7 @@ export const Field = ({
                 max={max}
                 min={min}
             />
-            {error && <div className={errorClass} name={name}>{errorMessage}</div>}
+            <div className={errorClass} name={name}>{error[name]}</div>
         </div>
     )
 }
