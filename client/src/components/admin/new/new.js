@@ -75,12 +75,13 @@ class NewPost extends Form {
 
     render(){
         let err = this.state.errors;
+        console.log("rerendered.  state: ", this.state);
         return (
             <div className="admin section-container center">
                 <div className="admin-background">
                     <AdminHeader mainHistory={history}/>
                     <NavButton text="Create New Post" buttonClasses = "title" onClick="null"/>
-                    <Form submitForm={this.submitForm} validSchema={this.validSchema}>
+                    <Form validSchema={this.validSchema} onSubmit={this.submitForm}>
                         <Field name='postTitle' label="Post Title" max="60" min="1" error={err} onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur} />
                         <Field name="postContent" label="Post Content" fieldClass="textarea" min="1" error={err} onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur}/>
                         <Field name="postQuote" label="Post Quote" max="255" min="1" error={err} onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur} />

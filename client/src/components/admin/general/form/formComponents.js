@@ -7,7 +7,8 @@ export const Field = ({
     labelClass="form-label", 
     fieldClass="fat-border form-input", 
     errorClass="form-error", 
-    id=null
+    id=null,
+    onClick=null
     }) => {
         
     if (fieldClass==="textarea"){ fieldClass="fat-border form-textarea"};
@@ -31,6 +32,7 @@ export const Field = ({
                 value={value} 
                 onChange={onChange}
                 onBlur={onBlur}
+                onClick={onClick}
                 id={id}
                 maxLength={max}
                 minLength={min}
@@ -43,22 +45,24 @@ export const Field = ({
 }
 
 export const FormButton = ({
-    text, error, reroute,
+    text, error, reroute, onClick,
     returnText="Return",
     componentDivClass="xlrg-flx-container flex-right", 
     groupDivClass="lrg-container align-right top-space", 
     divClass='small-button fat-border after-space', 
     buttonClass='text small-button fat-border', 
-    errorClass="form-error", id=null
+    errorClass="form-error", 
+    id=null,
     }) => {
         
     return (
         <div className={componentDivClass}>
             <div className={groupDivClass}>
                 <div className ={divClass} onClick={reroute} role="button">{returnText}</div>                
-                <button className={buttonClass} type='submit'>{text}</button>
+                <button className={buttonClass} onClick={onClick}>{text}</button>
             </div>
             {error && <div className={errorClass} >{error}</div>}
         </div>
     )
 }
+

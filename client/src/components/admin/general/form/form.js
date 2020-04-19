@@ -20,40 +20,25 @@ class Form extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChangeBlur = this.handleChangeBlur.bind(this);
     }
-//-------------
-    // async validateField(input){
-
-    //     console.log("testing validate property function");
-        
-    //     const {name, value} = input;
-    //     const fieldValues = { [name]: value };
-    //     console.log("fieldValues: ", fieldValues, "schema: ", this.schema);
-    //     const fieldSchema = { [name]: this.schema[name] };
-
-    //     //partway stop;
-    //     const response = await this.schema.isValid(fieldValues, {abortEarly: true});;
-    //     console.log("validateField yup response: ", response);
-    //     // const { error } = Joi.validate(obj, schema);
-    //     // return error ? error.details[0].message : null;
-    // };
 
     reroute(){
         this.props.history.goBack();
     };
 
     async validateForm(){
+        const data = {...this.state};
         const schema = yup.object().shape(this.props.validSchema);
-
-        let errors = [];
+        console.log("validateForm starting state: ", data)
+        let errors = {};
         await schema.validate(this.state.data, {abortEarly:false}).catch(errs => {
             errs.inner.map(err=>{
-                errors.push({
-                    name: err.path,
-                    message: err.message
-                });
+                errors[err.path] = err.message;
+                // errors.push({
+                //     name: err.path,
+                //     message: err.message
+                // });
             });            
         });
-        console.log("form errors: ", errors);
         return errors;
     };
 
@@ -66,22 +51,24 @@ class Form extends Component {
         } else return null;
     };
 
-    async handleSubmit(e){
-        e.preventDefault();
-        const errors = {...this.state.errors};
+    handleSubmit(e){
+        console.log("handleSubmit starting state: ", this.state);
 
-        const [allErrors] = await this.validateForm();
-        console.log("handlesubmit returned errors: ", errors);
-        this.setState({errors : allErrors});
-        console.log("state in handle submit: ", this.state);
-        if (errors) return;
-        this.props.submitForm();
-        this.props.submitForm(this.state.data);
+        e.preventDefault();
+        const data = new FormData();
+        const allErrors = this.validateForm();
+        this.setState({errors : allErrors || {}});
+        // if (this.state.errors) return;
+        console.log("logging props: ", this.props);
+        this.props.onSubmit();
+        // this.props.submitForm(this.state.data);
+        console.log("handleSubmit ending state: ", this.state);
     };
 
     async handleChangeBlur({currentTarget: input}){
-
+        console.log("handleChangeBlur starting state: ", this.state);
         const errors = {...this.state.errors};
+
         let errorMessage = await this.validateField(input);
         if (errorMessage) errors[input.name] = errorMessage;
         else delete errors[input.name];
@@ -89,6 +76,8 @@ class Form extends Component {
         const data = { ...this.state.data };
         data[input.name] = input.value;
         this.setState({ data, errors });
+        console.log("handleChangeBlur ending state: ", this.state);
+
     };
  
     render(){
@@ -102,16 +91,3 @@ class Form extends Component {
 
 export default Form;
 
-
-
-
-
-
-// const valid = await checkoutAddressSchema.isValid(addressFormData);
-// OR
-// checkoutAddressSchema
-//   .isValid(addressFormData)
-//   .then(function(valid) {
-      
-//      //valid - true or false
-//   });
