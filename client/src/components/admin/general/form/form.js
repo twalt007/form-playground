@@ -39,6 +39,9 @@ class Form extends Component {
                 // });
             });            
         });
+        console.log("errors in FUll Form: ", errors);
+        this.setState({errors});
+        console.log("state set in validate Form funciton: ", this.state);
         return errors;
     };
 
@@ -51,16 +54,15 @@ class Form extends Component {
         } else return null;
     };
 
-    handleSubmit(e){
+    async handleSubmit(e){
         console.log("handleSubmit starting state: ", this.state);
 
         e.preventDefault();
-        const data = new FormData();
-        const allErrors = this.validateForm();
-        this.setState({errors : allErrors || {}});
-        // if (this.state.errors) return;
-        console.log("logging props: ", this.props);
-        this.props.onSubmit();
+        let allErrors = await this.validateForm();
+        if (allErrors) console.log("AllErrors frecieved in handleSubmit from validate Form: ", allErrors);
+        //this.setState({errors : allErrors });
+        //if (this.state.errors) return;
+        //this.props.onSubmit();
         // this.props.submitForm(this.state.data);
         console.log("handleSubmit ending state: ", this.state);
     };
@@ -72,6 +74,9 @@ class Form extends Component {
         let errorMessage = await this.validateField(input);
         if (errorMessage) errors[input.name] = errorMessage;
         else delete errors[input.name];
+
+        let fullForm = await this.validateForm();
+        console.log("fullForm Errors: ", fullForm);
 
         const data = { ...this.state.data };
         data[input.name] = input.value;

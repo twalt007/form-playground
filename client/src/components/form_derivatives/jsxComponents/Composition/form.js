@@ -1,9 +1,7 @@
 //replace "components/admin/general/form/form.js" with this content
 
-
 import React, { Component } from 'react';
-import { Field, FormButton } from './formComponents'
-import * as Yup from 'yup';
+import * as yup from 'yup';
 import './form.scss'
 
 
@@ -20,47 +18,76 @@ class Form extends Component {
         this.validateForm = this.validateForm.bind(this);
         this.validateField = this.validateField.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+        this.handleChangeBlur = this.handleChangeBlur.bind(this);
     }
-    
+
     reroute(){
-        mainHistory.push(returnUrl);
+        this.props.history.goBack();
     };
 
-    validateForm(){
-        console.log("testing validation function");
-        if (!error) {
-            return null;
-        }
-        //something to push error messages to variable
-        return errors
-    };
-    
-    validateField(){
-        console.log("testing validate property function");
+    async validateForm(){
+        const data = {...this.state};
+        const schema = yup.object().shape(this.props.validSchema);
+        console.log("validateForm starting state: ", data)
+        let errors = {};
+        await schema.validate(this.state.data, {abortEarly:false}).catch(errs => {
+            errs.inner.map(err=>{
+                errors[err.path] = err.message;
+            });            
+        });
+        console.log("errors in FUll Form: ", errors);
+        this.setState({errors});
+        console.log("state set in validate Form funciton: ", this.state);
+        return errors;
     };
 
-    handleSubmit(e){
+    async validateField({name, value }){
+        const schema = yup.object().shape({ [name]: this.validSchema[name] });
+        let obj = {[name]:value};
+        let errorMessage = await schema.validate(obj).catch(errs => errs);
+        if (errorMessage.message) {
+            return errorMessage.message
+        } else return null;
+    };
+
+    async handleSubmit(e){
+        console.log("handleSubmit starting state: ", this.state);
         e.preventDefault();
-        console.log("testing submit functionality");
+        let allErrors = await this.validateForm();
+        if (allErrors) console.log("AllErrors frecieved in handleSubmit from validate Form: ", allErrors);
+        //this.setState({errors : allErrors });
+        //if (this.state.errors) return;
+        //this.props.onSubmit();
+        // this.props.submitForm(this.state.data);
+        console.log("handleSubmit ending state: ", this.state);
     };
 
-    handleChange(e){
-        const { value } = e.currentTarget;
-        console.log("inside onchange event, e props", value);
+    async handleChangeBlur({currentTarget: input}){
+        console.log("handleChangeBlur starting state: ", this.state);
+        const errors = {...this.state.errors};
+
+        let errorMessage = await this.validateField(input);
+        if (errorMessage) errors[input.name] = errorMessage;
+        else delete errors[input.name];
+
+        let fullForm = await this.validateForm();
+        console.log("fullForm Errors: ", fullForm);
+
+        const data = { ...this.state.data };
+        data[input.name] = input.value;
+        this.setState({ data, errors });
+        console.log("handleChangeBlur ending state: ", this.state);
 
     };
-
+ 
     render(){
-        console.log("this.props.children", props.children);
-        return(
-            <form className="form" encType="multipart/form-data" onSubmit={this.handleSubmit}>
-                {this.props.children}
-            </form>
+        return (
+        <form className="form" encType="multipart/form-data" onSubmit={this.handleSubmit}>
+            {this.props.children}
+        </form>
         )
-    }        
+    }
 }
 
 export default Form;
 
-//{React.cloneElement(this.props.children, {...this.props})}
