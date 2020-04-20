@@ -1,15 +1,11 @@
-//replace 'components/admin/new/new.js with this content.
-
-
 import React, { Component } from 'react'
 import AdminHeader from '../general/header/adminHeader'
 import NavButton from '../../general/navButton'
-import Form from '../general/form'
 import { Field, FormButton } from '../general/form/formComponents'
 import * as yup from 'yup'
 import axios from 'axios';
 
-class NewPost extends Form {
+class NewPost extends Component {
     constructor(props){
         super(props)
 
@@ -33,61 +29,106 @@ class NewPost extends Form {
             .trim()
         }
 
+        this.reroute = this.reroute.bind(this);
+        this.validateForm = this.validateForm.bind(this);
+        this.validateField = this.validateField.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChangeBlur = this.handleChangeBlur.bind(this);
         this.submitForm = this.submitForm.bind(this);
-    }
-    // handleSubmit = async(values) => {
-    //     const {history, userId='a9ec5c8d-455a-11ea-8fd0-a4db300c2566'} = this.props;
-    //     console.log("inside newPost handleSubmit function")
-    //     console.log("newPost handleSubmit form Values: ", values)
-    //     const data = {
-    //         userId: userId,
-    //         post: {
-    //             postType: values.postType,
-    //             contentType: values.contentType,
-    //             postTitle: values.postTitle,
-    //             postContent: values.postContent,
-    //             postQuote: values.postQuote,
-    //         }
-    //     }
-    //     console.log("handleSubmit new post data: ", data);
-    //     let resultMessageState;
-    //     try{
-    //         const resp = await axios.post(`/api/admin/new-post`, data);
-    //         console.log("hanleSubmit resp from axios call: ", resp);
-    //         if (resp.data.code===200){
-    //             resultMessageState = 'success';         
-    //         }
-    //         history.push('/result-message', resultMessageState);
-    //         return;
-    //     }
-    //     catch (error){
-    //         console.log("Error submitting content to be posted. ", error);
-    //         history.push('/result-message');
-    //     }
-        
-        
-    // }
+    }        
 
-    submitForm = (props)=>{
-        console.log("inside submitForm, data recieved from child", this.props);
-        console.log("new.js state errors: ", this.state);
+    reroute(){
+        this.props.history.goBack();
+    };
+
+    async validateForm(){
+        const data = {...this.state};
+        const schema = yup.object().shape(this.validSchema);
+        console.log("validateForm starting state: ", data)
+        let errors = {};
+        await schema.validate(this.state.data, {abortEarly:false}).catch(errs => {
+            errs.inner.map(err=>{
+                errors[err.path] = err.message;
+            });            
+        });
+        return errors;
+    };
+
+    async validateField({name, value }){
+        const schema = yup.object().shape({ [name]: this.validSchema[name] });
+        let obj = {[name]:value};
+        let errorMessage = await schema.validate(obj).catch(errs => errs);
+        if (errorMessage.message) {
+            return errorMessage.message
+        } else return null;
+    };
+
+    async handleSubmit(e){
+        e.preventDefault();
+
+        let allErrors = await this.validateForm();
+        this.setState({errors : allErrors });
+
+        if (Object.keys(allErrors).length !== 0) {
+            return;
+        };
+
+        this.submitForm(this.state.data);
+    };
+
+    async handleChangeBlur({currentTarget: input}){
+        const errors = {...this.state.errors};
+
+        let errorMessage = await this.validateField(input);
+        if (errorMessage) errors[input.name] = errorMessage;
+        else delete errors[input.name];
+
+        const data = { ...this.state.data };
+        data[input.name] = input.value;
+        this.setState({ data, errors });
+    };
+
+    submitForm = async(values) => {
+        const {history, userId='a9ec5c8d-455a-11ea-8fd0-a4db300c2566'} = this.props;
+        console.log("newPost handleSubmit form Values: ", values)
+        const data = {
+            userId: userId,
+            post: values 
+        }
+        console.log("handleSubmit new post data: ", data);
+        let resultMessageState;
+        try{
+            const resp = await axios.post(`/api/admin/new-post`, data);
+            console.log("hanleSubmit resp from axios call: ", resp);
+            if (resp.data.code===200){
+                resultMessageState = 'success';         
+            }
+            history.push('/result-message', resultMessageState);
+            return;
+        }
+        catch (error){
+            console.log("Error submitting content to be posted. ", error);
+            history.push('/result-message');
+        }
+        
+        
     }
 
     render(){
+        let oCB = this.handleChangeBlur;
         let err = this.state.errors;
-        console.log("rerendered.  state: ", this.state);
         return (
             <div className="admin section-container center">
                 <div className="admin-background">
                     <AdminHeader mainHistory={history}/>
                     <NavButton text="Create New Post" buttonClasses = "title" onClick="null"/>
-                    <Form validSchema={this.validSchema} onSubmit={this.submitForm}>
-                        <Field name='postTitle' label="Post Title" max="60" min="1" error={err} onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur} />
-                        <Field name="postContent" label="Post Content" fieldClass="textarea" min="1" error={err} onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur}/>
-                        <Field name="postQuote" label="Post Quote" max="255" min="1" error={err} onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur} />
-                        <Field name="postImage" label="Post Image" type="file" accept="image/*" error={err} onChange={this.handleChangeBlur} onBlur={this.handleChangeBlur} />
+                    <form className="form" encType="multipart/form-data" onSubmit={this.handleSubmit}>
+                        <Field name='postTitle' label="Post Title" max="60" min="1" error={err} onChange={oCB} onBlur={oCB} />
+                        <Field name="postContent" label="Post Content" fieldClass="textarea" min="1" error={err} onChange={oCB} onBlur={oCB}/>
+                        <Field name="postQuote" label="Post Quote" max="255" min="1" error={err} onChange={oCB} onBlur={oCB} />
+                        <Field name="postImage" label="Post Image" type="file" accept="image/*" error={err} onChange={oCB} onBlur={oCB} />
                         <FormButton text="Post" reroute={this.reroute}/>
-                    </Form>
+                    </form>
                     <div className="bottom-space"></div>
                 </div>
             </div>

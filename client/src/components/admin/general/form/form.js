@@ -33,10 +33,6 @@ class Form extends Component {
         await schema.validate(this.state.data, {abortEarly:false}).catch(errs => {
             errs.inner.map(err=>{
                 errors[err.path] = err.message;
-                // errors.push({
-                //     name: err.path,
-                //     message: err.message
-                // });
             });            
         });
         console.log("errors in FUll Form: ", errors);
@@ -56,7 +52,6 @@ class Form extends Component {
 
     async handleSubmit(e){
         console.log("handleSubmit starting state: ", this.state);
-
         e.preventDefault();
         let allErrors = await this.validateForm();
         if (allErrors) console.log("AllErrors frecieved in handleSubmit from validate Form: ", allErrors);

@@ -46,6 +46,7 @@ export const Field = ({
 
 export const FormButton = ({
     text, error, reroute, onClick,
+    type="submit",
     returnText="Return",
     componentDivClass="xlrg-flx-container flex-right", 
     groupDivClass="lrg-container align-right top-space", 
@@ -59,7 +60,7 @@ export const FormButton = ({
         <div className={componentDivClass}>
             <div className={groupDivClass}>
                 <div className ={divClass} onClick={reroute} role="button">{returnText}</div>                
-                <button className={buttonClass} onClick={onClick}>{text}</button>
+                <button className={buttonClass} type={type} onClick={onClick}>{text}</button>
             </div>
             {error && <div className={errorClass} >{error}</div>}
         </div>
